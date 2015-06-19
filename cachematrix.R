@@ -3,15 +3,18 @@
 ## Wraps a matrix object to add caching functionalities
 
 makeCacheMatrix <- function(x = matrix()) {
-  m <- NULL
+  inv <- NULL
+  
   get <- function()
     x
-  setInv <- function(inv)
-    m <<- inv
+  
+  setInv <- function(m)
+    inv <<- m
+  
   getInv <- function()
-    m
+    inv
+  
   list(
-    set = set, 
     get = get,
     setInv = setInv,
     getInv = getInv
@@ -24,12 +27,13 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
   ## Return a matrix that is the inverse of 'x'
-  m <- x$getInv()
-  if (!is.null(m)) {
-    return(m)
+  inv <- x$getInv()
+  if (!is.null(inv)) {
+    return(inv)
   }
-  data <- x$get()
-  m <- solve(data, ...)
-  x$setInv(m)
-  m
+  
+  m <- x$get()
+  inv <- solve(m, ...)
+  x$setInv(inv)
+  inv
 }
